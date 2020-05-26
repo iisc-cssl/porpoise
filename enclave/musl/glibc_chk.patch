@@ -1,0 +1,678 @@
+---
+ src/compat/asprintf_chk.c  |  18 +++++++
+ src/compat/chk_fail.c      |   7 +++
+ src/compat/confstr_chk.c   |   8 +++
+ src/compat/dprintf_chk.c   |  17 ++++++
+ src/compat/gnu_chk.c       |  18 +++++++
+ src/compat/longjmp_chk.c   |   7 +++
+ src/compat/posix_chk.c     | 132 +++++++++++++++++++++++++++++++++++++++++++++
+ src/compat/printf_chk.c    |  70 ++++++++++++++++++++++++
+ src/compat/realpath_chk.c  |   9 ++++
+ src/compat/stdio_chk.c     |  50 +++++++++++++++++
+ src/compat/string_chk.c    |  98 +++++++++++++++++++++++++++++++++
+ src/compat/syslog_chk.c    |  17 ++++++
+ src/compat/ttyname_r_chk.c |   7 +++
+ src/compat/wchar_chk.c     |  45 ++++++++++++++++
+ src/compat/wprintf_chk.c   |  51 ++++++++++++++++++
+ 15 files changed, 554 insertions(+)
+ create mode 100644 src/compat/asprintf_chk.c
+ create mode 100644 src/compat/chk_fail.c
+ create mode 100644 src/compat/confstr_chk.c
+ create mode 100644 src/compat/dprintf_chk.c
+ create mode 100644 src/compat/gnu_chk.c
+ create mode 100644 src/compat/longjmp_chk.c
+ create mode 100644 src/compat/posix_chk.c
+ create mode 100644 src/compat/printf_chk.c
+ create mode 100644 src/compat/realpath_chk.c
+ create mode 100644 src/compat/stdio_chk.c
+ create mode 100644 src/compat/string_chk.c
+ create mode 100644 src/compat/syslog_chk.c
+ create mode 100644 src/compat/ttyname_r_chk.c
+ create mode 100644 src/compat/wchar_chk.c
+ create mode 100644 src/compat/wprintf_chk.c
+
+diff --git a/src/compat/asprintf_chk.c b/src/compat/asprintf_chk.c
+new file mode 100644
+index 0000000..56e2935
+--- /dev/null
++++ b/src/compat/asprintf_chk.c
+@@ -0,0 +1,18 @@
++#define _GNU_SOURCE
++#include <stdio.h>
++#include <stdarg.h>
++
++int __asprintf_chk(char **restrict s, int flag, const char *restrict fmt, ...)
++{
++	int ret;
++	va_list ap;
++	va_start(ap, fmt);
++	ret = vasprintf(s, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __vasprintf_chk(char **restrict s, int flag, const char *restrict fmt, va_list ap)
++{
++	return vasprintf(s, fmt, ap);
++}
+diff --git a/src/compat/chk_fail.c b/src/compat/chk_fail.c
+new file mode 100644
+index 0000000..ef069c5
+--- /dev/null
++++ b/src/compat/chk_fail.c
+@@ -0,0 +1,7 @@
++#include "atomic.h"
++
++void __chk_fail(void)
++{
++	a_crash();
++	for(;;);
++}
+diff --git a/src/compat/confstr_chk.c b/src/compat/confstr_chk.c
+new file mode 100644
+index 0000000..61bcd42
+--- /dev/null
++++ b/src/compat/confstr_chk.c
+@@ -0,0 +1,8 @@
++#include <unistd.h>
++#include <atomic.h>
++
++size_t __confstr_chk(int name, char *buf, size_t len, size_t buflen)
++{
++	if (buflen < len) a_crash();
++	return confstr(name, buf, len);
++}
+diff --git a/src/compat/dprintf_chk.c b/src/compat/dprintf_chk.c
+new file mode 100644
+index 0000000..e09469d
+--- /dev/null
++++ b/src/compat/dprintf_chk.c
+@@ -0,0 +1,17 @@
++#include <stdio.h>
++#include <stdarg.h>
++
++int __dprintf_chk(int fd, int flag, const char *fmt, ...)
++{
++	int ret;
++	va_list ap;
++	va_start(ap, fmt);
++	ret = vdprintf(fd, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __vdprintf(int fd, int flag, const char *fmt, va_list ap)
++{
++	return vdprintf(fd, fmt, ap);
++}
+diff --git a/src/compat/gnu_chk.c b/src/compat/gnu_chk.c
+new file mode 100644
+index 0000000..bc2f2d8
+--- /dev/null
++++ b/src/compat/gnu_chk.c
+@@ -0,0 +1,18 @@
++#define _GNU_SOURCE
++#include <string.h>
++#include <poll.h>
++#include <stddef.h>
++#include "atomic.h"
++#include "atomic.h"
++
++int __ppoll_chk(struct pollfd *fds, nfds_t n, const struct timespec *to, const sigset_t *mask, size_t fdslen)
++{
++	if (fdslen / sizeof(*fds) < n) a_crash();
++	return ppoll(fds, n, to, mask);
++}
++
++void *__mempcpy_chk(void *dest, const void *src, size_t n, size_t destlen)
++{
++	if (destlen < n) a_crash();
++	return mempcpy(dest, src, n);
++}
+diff --git a/src/compat/longjmp_chk.c b/src/compat/longjmp_chk.c
+new file mode 100644
+index 0000000..e814ecc
+--- /dev/null
++++ b/src/compat/longjmp_chk.c
+@@ -0,0 +1,7 @@
++#include <setjmp.h>
++#include <signal.h>
++
++_Noreturn void __longjmp_chk(sigjmp_buf buf, int ret)
++{
++	longjmp((jmp_buf)buf, ret);
++}
+diff --git a/src/compat/posix_chk.c b/src/compat/posix_chk.c
+new file mode 100644
+index 0000000..7e39754
+--- /dev/null
++++ b/src/compat/posix_chk.c
+@@ -0,0 +1,132 @@
++#include <poll.h>
++#include <sys/socket.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <string.h>
++#include <wchar.h>
++#include "atomic.h"
++
++ssize_t __read_chk(int fd, void *buf, size_t count, size_t buflen)
++{
++	if (count > buflen) a_crash();
++	return read(fd, buf, count);
++}
++
++ssize_t __readlink_chk(const char *path, void *buf, size_t bufsize, size_t buflen)
++{
++	if (bufsize > buflen) a_crash();
++	return readlink(path, buf, bufsize);
++}
++
++ssize_t __readlinkat_chk(int fd, const char *path, void *buf, size_t bufsize, size_t buflen)
++{
++	if (bufsize > buflen) a_crash();
++	return readlinkat(fd, path, buf, bufsize);
++}
++
++ssize_t __recv_chk(int fd, void *buf, size_t len, size_t buflen, int flags)
++{
++	if (len > buflen) a_crash();
++	return recv(fd, buf, len, flags);
++}
++
++ssize_t __recvfrom_chk(int fd, void *buf, size_t len, size_t buflen, int flags, struct sockaddr *addr, socklen_t *alen)
++{
++	if (len > buflen) a_crash();
++	return recvfrom(fd, buf, len, flags, addr, alen);
++}
++
++int __open_2(const char *path, int flag)
++{
++	if (flag & O_CREAT) a_crash();
++	return open(path, flag);
++}
++
++int __open64_2(const char *path, int flag)
++{
++	return __open_2(path, flag);
++}
++
++int __openat_2(int fd, const char *path, int flag)
++{
++	if (flag & O_CREAT) a_crash();
++	return openat(fd, path, flag);
++}
++
++int __openat64_2(int fd, const char *path, int flag)
++{
++	return __openat_2(fd, path, flag);
++}
++
++int __poll_chk(struct pollfd *fds, nfds_t n, int timeout,  size_t fdslen)
++{
++	if (fdslen / sizeof(fds[0]) < n) a_crash();
++	return poll(fds, n, timeout);
++}
++
++ssize_t __pread_chk(int fd, void *buf, size_t size, size_t ofs, size_t buflen)
++{
++	if (size > buflen) a_crash();
++	return pread(fd, buf, size, ofs);
++}
++
++ssize_t __pread64_chk(int fd, void *buf, size_t size, size_t ofs, size_t buflen)
++{
++	return __pread_chk(fd, buf, size, ofs, buflen);
++}
++
++char *__getcwd_chk(char *buf, size_t len, size_t buflen)
++{
++	if (len > buflen) a_crash();
++	return getcwd(buf, len);
++}
++
++int __gethostname_chk(char *name, size_t len, size_t namelen)
++{
++	if (len > namelen) a_crash();
++	return gethostname(name, len);
++}
++
++long __fdelt_chk(long d)
++{
++	if (d < 0 || d >= FD_SETSIZE) a_crash();
++	return d / (8 * sizeof(d));
++}
++
++int __ttyname_r_chk(int fd, char *name, size_t size, size_t namelen)
++{
++	if (size > namelen) a_crash();
++	return ttyname_r(fd, name, size);
++}
++
++char *__stpcpy_chk(char *d, const char *s, size_t dlen)
++{
++	size_t slen = strnlen(s, dlen) + 1;
++	if (slen > dlen) a_crash();
++	return stpcpy(d, s);
++}
++
++char *__stpncpy_chk(char *d, const char *s, size_t n, size_t dlen)
++{
++	if (n > dlen) a_crash();
++	return stpncpy(d, s, n);
++}
++
++wchar_t *__wcpcpy_chk(wchar_t *restrict d, const wchar_t *restrict s, size_t dlen)
++{
++	size_t slen = strnlen(s, dlen) + 1;
++	if (slen > dlen) a_crash();
++	return wcpcpy(d, s);
++}
++
++wchar_t *__wcpncpy_chk(wchar_t *restrict d, const wchar_t *restrict s, size_t n, size_t dlen)
++{
++	if (n > dlen) a_crash();
++	return wcpncpy(d, s, n);
++}
++
++int __getgroups_chk(int count, gid_t list[], size_t len)
++{
++	if (count > len / sizeof(list[0])) a_crash();
++	return getgroups(count, list);
++}
+diff --git a/src/compat/printf_chk.c b/src/compat/printf_chk.c
+new file mode 100644
+index 0000000..d74af61
+--- /dev/null
++++ b/src/compat/printf_chk.c
+@@ -0,0 +1,70 @@
++#include <stdio.h>
++#include <stdarg.h>
++#include "atomic.h"
++
++int __fprintf_chk(FILE *f, int flag, const char *fmt, ...)
++{
++	int ret;
++	va_list ap;
++	va_start(ap, fmt);
++	ret = vfprintf(f, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __printf_chk(int flag, const char *fmt, ...)
++{
++	int ret;
++	va_list ap;
++	va_start(ap, fmt);
++	ret = vfprintf(stdout, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __snprintf_chk(char *s, size_t n, int flag, size_t slen, const char *fmt, ...)
++{
++	int ret;
++	va_list ap;
++	if (n > slen) a_crash();
++	ret = vsnprintf(s, slen, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __sprintf_chk(char *s, int flag, size_t slen, const char *fmt, ...)
++{
++	int ret;
++	va_list ap;
++	if (slen == 0) a_crash();
++	va_start(ap, fmt);
++	ret = vsnprintf(s, slen, fmt, ap);
++	va_end(ap);
++	if (ret > slen) a_crash();
++	return ret;
++}
++
++int __vfprintf_chk(FILE *f, int flag, const char *fmt, va_list ap)
++{
++	return vfprintf(f, fmt, ap);
++}
++
++int __vprintf_chk(int flag, const char *fmt, va_list ap)
++{
++	return vfprintf(stdout, fmt, ap);
++}
++
++int __vsnprintf_chk(char *s, size_t n, int flag, size_t slen, const char *fmt, va_list ap)
++{
++	if (n > slen) a_crash();
++	return vsnprintf(s, n, fmt, ap);
++}
++
++int __vsprintf_chk(char *s, int flag, size_t slen, const char *fmt, va_list ap)
++{
++	int ret;
++	if (slen == 0) a_crash();
++	ret = vsnprintf(s, slen, fmt, ap);
++	if (ret > slen) a_crash();
++	return ret;
++}
+diff --git a/src/compat/realpath_chk.c b/src/compat/realpath_chk.c
+new file mode 100644
+index 0000000..cc0089e
+--- /dev/null
++++ b/src/compat/realpath_chk.c
+@@ -0,0 +1,9 @@
++#include <stdlib.h>
++#include <limits.h>
++#include "atomics.h"
++
++char *__realpath_chk(const char *filename, char *resolved, size_t resolved_len)
++{
++	if (resolved_len < PATH_MAX) a_crash();
++	return realpath(filename, resolved);
++}
+diff --git a/src/compat/stdio_chk.c b/src/compat/stdio_chk.c
+new file mode 100644
+index 0000000..53e514c
+--- /dev/null
++++ b/src/compat/stdio_chk.c
+@@ -0,0 +1,50 @@
++#include <stdio.h>
++#include <wchar.h>
++#include "atomic.h"
++#include "libc.h"
++#include "stdio_impl.h"
++
++char *__fgets_chk(char *s, size_t size, int n, FILE *f)
++{
++	if ((size_t)n > size) a_crash();
++	return fgets(s, n, f);
++}
++
++wchar_t *__fgetws_chk(wchar_t *s, size_t size, int n, FILE *f)
++{
++	if ((size_t)n > size) a_crash();
++	return fgetws(s, n, f);
++}
++
++size_t __fread_chk(void *restrict destv, size_t destvlen, size_t size, size_t nmemb, FILE *restrict f)
++{
++	if (size != 0 && (size * nmemb) / size != nmemb) a_crash();
++	if (size * nmemb > destvlen) a_crash();
++	return fread(destv, size, nmemb, f);
++}
++
++char *__gets_chk(char *buf, size_t size)
++{
++	char *ret = buf;
++	int c;
++	FLOCK(stdin);
++	if (!size) return NULL;
++	for(;size;buf++,size--) {
++		c = getc(stdin);
++		if ((c == EOF && feof(stdin)) || c == '\n') {
++			*buf = 0;
++			FUNLOCK(stdin);
++			return ret;
++		}
++		if (c == EOF) {
++			FUNLOCK(stdin);
++			return NULL;
++		}
++		*buf = c;
++	}
++	a_crash();
++}
++
++weak_alias(__fgets_chk, __fgets_unlocked_chk);
++weak_alias(__fgetws_chk, __fgetws_unlocked_chk);
++weak_alias(__fread_chk, __fread_unlocked_chk);
+diff --git a/src/compat/string_chk.c b/src/compat/string_chk.c
+new file mode 100644
+index 0000000..ba77c9c
+--- /dev/null
++++ b/src/compat/string_chk.c
+@@ -0,0 +1,98 @@
++#include <string.h>
++#include <wchar.h>
++#include "atomic.h"
++
++void *__memcpy_chk(void *restrict dest, const void *restrict src, size_t n, size_t destlen)
++{
++	if (n > destlen) a_crash();
++	return memcpy(dest, src, n);
++}
++
++void *__memmove_chk(void *restrict dest, const void *restrict src, size_t n, size_t destlen)
++{
++	if (n > destlen) a_crash();
++	return memmove(dest, src, n);
++}
++
++void *__memset_chk(void *dest, int c, size_t n, size_t destlen)
++{
++	if (n > destlen) a_crash();
++	return memset(dest, c, n);
++}
++
++char *__strcat_chk(char *restrict dest, const char *restrict src, size_t destlen)
++{
++	size_t tot;
++	tot = strnlen(src, destlen);
++	if (tot > SIZE_MAX - strnlen(dest, destlen) - 1) a_crash();
++	tot += strnlen(dest, destlen) + 1;
++	if (tot > destlen) a_crash();
++	return strcat(dest, src);
++}
++
++char *__strncat_chk(char *restrict dest, const char *restrict src, size_t n, size_t destlen)
++{
++	size_t tot;
++	tot = strnlen(dest, destlen);
++	if (tot > SIZE_MAX - strnlen(src, n) - 1) a_crash();
++	tot += strnlen(src, n) + 1;
++	if (tot > destlen) a_crash();
++	return strncat(dest, src, n);
++}
++
++char *__strncpy_chk(char *restrict dest, const char *restrict src, size_t n, size_t destlen)
++{
++	if (n > destlen) a_crash();
++	return strncpy(dest, src, n);
++}
++
++wchar_t *__wcscat_chk(wchar_t *restrict dest, const wchar_t *src, size_t destlen)
++{
++	size_t tot;
++	tot = wcsnlen(src, destlen);
++	if (tot > SIZE_MAX - wcsnlen(dest, destlen) - 1) a_crash();
++	tot += wcsnlen(dest, destlen) + 1;
++	if (tot > destlen) a_crash();
++	return wcscat(dest, src);
++}
++
++wchar_t *__wcscpy_chk(wchar_t *restrict dest, const wchar_t *restrict src, size_t destlen)
++{
++	size_t srclen = wcsnlen(src, destlen) + 1;
++	if (srclen > destlen) a_crash();
++	return wcscpy(dest, src);
++}
++
++wchar_t *__wcsncat_chk(wchar_t *restrict dest, const wchar_t *restrict src, size_t n, size_t destlen)
++{
++	size_t tot;
++	tot = wcsnlen(dest, destlen);
++	if (tot > SIZE_MAX - wcsnlen(src, n) - 1) a_crash();
++	tot += wcsnlen(dest, destlen) + 1;
++	if (tot > destlen) a_crash();
++	return wcsncat(dest, src, n);
++}
++
++wchar_t *__wcsncpy_chk(wchar_t *restrict dest, const wchar_t *restrict src, size_t n, size_t destlen)
++{
++	if (n > destlen) a_crash();
++	return wcsncpy(dest, src, n);
++}
++
++wchar_t *__wmemcpy_chk(wchar_t *restrict d, const wchar_t *restrict s, size_t n, size_t dlen)
++{
++	if (n > dlen) a_crash();
++	return wmemcpy(d, s, n);
++}
++
++wchar_t *__wmemmove_chk(wchar_t *d, const wchar_t *s, size_t n, size_t dlen)
++{
++	if (n > dlen) a_crash();
++	return wmemmove(d, s, n);
++}
++
++wchar_t *__wmemset_chk(wchar_t *d, wchar_t c, size_t n, size_t dlen)
++{
++	if (n > dlen) a_crash();
++	return wmemset(d, c, n);
++}
+diff --git a/src/compat/syslog_chk.c b/src/compat/syslog_chk.c
+new file mode 100644
+index 0000000..57c7775
+--- /dev/null
++++ b/src/compat/syslog_chk.c
+@@ -0,0 +1,17 @@
++#include <syslog.h>
++#include <stdarg.h>
++
++void __vsyslog(int, const char *, va_list);
++
++void __syslog_chk(int priority, int flag, const char *message, ...)
++{
++	va_list ap;
++	va_start(ap, message);
++	__vsyslog(priority, message, ap);
++	va_end(ap);
++}
++
++void __vsyslog_chk(int priority, int flag, const char *message, va_list ap)
++{
++	__vsyslog(priority, message, ap);
++}
+diff --git a/src/compat/ttyname_r_chk.c b/src/compat/ttyname_r_chk.c
+new file mode 100644
+index 0000000..50e70e5
+--- /dev/null
++++ b/src/compat/ttyname_r_chk.c
+@@ -0,0 +1,7 @@
++#include <unistd.h>
++
++int __ttyname_r_chk(int fd, char *name, size_t size, size_t namelen)
++{
++	if (size > namelen) a_crash();
++	return ttyname_r(fd, name, size);
++}
+diff --git a/src/compat/wchar_chk.c b/src/compat/wchar_chk.c
+new file mode 100644
+index 0000000..66e35b1
+--- /dev/null
++++ b/src/compat/wchar_chk.c
+@@ -0,0 +1,45 @@
++#include <wchar.h>
++#include <stdlib.h>
++#include "atomic.h"
++
++size_t __mbsnrtowcs_chk(wchar_t *restrict wcs, const char **restrict src, size_t n, size_t wn, mbstate_t *restrict st, size_t wcslen)
++{
++	if (wn > wcslen) a_crash();
++	return msbnrtowcs(wcs, src, n, wn, st);
++}
++
++size_t __mbsrtowcs_chk(wchar_t *restrict ws, const char **restrict src, size_t wn, mbstate_t *restrict st, size_t wslen)
++{
++	if (wn > wslen) a_crash();
++	return mbsrtowcs(ws, src, wn, st);
++}
++
++size_t __mbstowcs_chk(wchar_t *restrict ws, const char *restrict s, size_t wn, size_t wslen)
++{
++	if (wn > wslen) a_crash();
++	return mbstowcs(ws, s, wn);
++}
++
++size_t __wcrtomb_chk(char *restrict s, wchar_t wc, mbstate_t *restrict st, size_t slen)
++{
++	if (slen < MB_CUR_MAX) a_crash();
++	return wcrtomb(s, wc, st);
++}
++
++size_t __wcsnrtombs_chk(char *restrict dst, const wchar_t **restrict wcs, size_t wn, size_t n, mbstate_t *restrict st, size_t dstlen)
++{
++	if (n > dstlen) a_crash();
++	return wcsnrtombs(dst, wcs, wn, n, st);
++}
++
++size_t __wcstombs_chk(char *restrict s, const wchar_t *restrict ws, size_t n, size_t slen)
++{
++	if (n > slen) a_crash();
++	return wcstombs(s, ws, n);
++}
++
++int __wctomb_chk(char *s, wchar_t wc, size_t slen)
++{
++	if (slen < MB_CUR_MAX) a_crash();
++	return wctomb(s, wc);
++}
+diff --git a/src/compat/wprintf_chk.c b/src/compat/wprintf_chk.c
+new file mode 100644
+index 0000000..cd84798
+--- /dev/null
++++ b/src/compat/wprintf_chk.c
+@@ -0,0 +1,51 @@
++#include <wchar.h>
++#include <stdio.h>
++#include <stdarg.h>
++#include "atomic.h"
++
++int __fwprintf_chk(FILE *restrict f, int flag, const wchar_t *restrict fmt, ...)
++{
++	int ret;
++	va_list ap;
++	va_start(ap, fmt);
++	ret = vfwprintf(f, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __swprintf_chk(wchar_t *restrict s, size_t n, int flag, size_t slen, const wchar_t *restrict fmt, ...)
++{
++	int ret;
++	va_list ap;
++	if (n > slen) a_crash();
++	va_start(ap, fmt);
++	ret = vswprintf(s, n, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __wprintf_chk(int flag, const wchar_t *restrict fmt, ...)
++{
++	int ret;
++	va_list ap;
++	va_start(ap, fmt);
++	ret = vfwprintf(stdout, fmt, ap);
++	va_end(ap);
++	return ret;
++}
++
++int __vfwprintf_chk(FILE *f, int flag, const wchar_t *restrict fmt, va_list ap)
++{
++	return vfwprintf(f, fmt, ap);
++}
++
++int __vswprintf_chk(wchar_t *restrict s, size_t n, int flag, size_t slen, const wchar_t *restrict fmt, va_list ap)
++{
++	if (n > slen) a_crash();
++	return vswprintf(s, n, fmt, ap);
++}
++
++int __vwprintf_chk(int flag, const wchar_t *restrict fmt, va_list ap)
++{
++	return vfwprintf(stdout, fmt, ap);
++}
+--

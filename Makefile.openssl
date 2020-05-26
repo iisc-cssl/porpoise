@@ -1,0 +1,8 @@
+#Begin: configuration of porting application
+application_name := openssl
+native_application_location = enclave/$(application_name)
+make_target :=
+native_application_executable := $(native_application_location)/$(application_name)
+#End: configuration of porting application
+
+include common.mk

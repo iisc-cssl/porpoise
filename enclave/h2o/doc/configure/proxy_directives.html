@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<base href="../" />
+
+<!-- oktavia -->
+<link rel="stylesheet" href="assets/searchstyle.css" type="text/css" />
+<script src="search/jquery-1.9.1.min.js"></script>
+<script src="search/oktavia-jquery-ui.js"></script>
+<script src="search/oktavia-english-search.js"></script>
+<!-- /oktavia -->
+
+<link rel="stylesheet" href="assets/style.css" type="text/css" />
+
+<title>Proxy Directives - Configure - H2O - the optimized HTTP/2 server</title>
+</head>
+<body>
+<div id="body">
+<div id="top">
+
+<h1>
+<a href="index.html">H2O</a>
+</h1>
+<p class="description">the optimized HTTP/1.x, HTTP/2 server</p>
+
+<!-- oktavia -->
+<form id="searchform">
+<input class="search" type="search" name="search" id="search" results="5" value="" placeholder="Search" />
+<div id="searchresult_box">
+<div id="close_search_box">&times;</div>
+<div id="searchresult_summary"></div>
+<div id="searchresult"></div>
+<div id="searchresult_nav"></div>
+<span class="pr">Powered by <a href="https://github.com/shibukawa/oktavia">Oktavia</a></span>
+</div>
+</form>
+<!-- /oktavia -->
+
+</div>
+
+<table id="menu">
+<tr>
+<td><a href="index.html">Top</a></td>
+<td><a href="install.html">Install</a></td>
+<td class="selected"><a href="configure.html">Configure</a></td>
+<td><a href="faq.html">FAQ</a></td>
+<td><a href="http://blog.kazuhooku.com/search/label/H2O" target="_blank">Blog</a></td>
+<td><a href="http://github.com/h2o/h2o/" target="_blank">Source</a></td>
+</tr>
+</table>
+
+<div id="main">
+
+<h2>
+<a href="configure.html">Configure</a> &gt;
+Proxy Directives
+</h2>
+
+
+<p>
+Proxy module is the reverse proxy implementation for H2O - it implements a HTTP client that forwards a HTTP request to an upstream server.
+</p>
+<p>
+When forwarding the requests, the module sets following request headers:
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc7230#section-5.7.1">via</a></li>
+<li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/x-forwarded-headers.html#x-forwarded-for">x-forwarded-for</a></li>
+<li><a href="http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/x-forwarded-headers.html#x-forwarded-proto">x-forwarded-proto</a></li>
+</ul>
+</p>
+<p>
+The HTTP client only supports HTTP/1.
+Support for HTTPS has been introduced in version 2.0.
+</p>
+<p>
+Following sections describe the configuration directives defined for the module.
+</p>
+
+<ul>
+<li><a href="configure/proxy_directives.html#proxy.reverse.url">
+<code>proxy.reverse.url</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.preserve-host">
+<code>proxy.preserve-host</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.preserve-x-forwarded-proto">
+<code>proxy.preserve-x-forwarded-proto</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.proxy-protocol">
+<code>proxy.proxy-protocol</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.emit-x-forwarded-headers">
+<code>proxy.emit-x-forwarded-headers</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.emit-via-header">
+<code>proxy.emit-via-header</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.emit-missing-date-header">
+<code>proxy.emit-missing-date-header</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.header.add">
+<code>proxy.header.add</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.header.append">
+<code>proxy.header.append</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.header.merge">
+<code>proxy.header.merge</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.header.set">
+<code>proxy.header.set</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.header.setifempty">
+<code>proxy.header.setifempty</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.header.unset">
+<code>proxy.header.unset</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.ssl.cafile">
+<code>proxy.ssl.cafile</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.ssl.session-cache">
+<code>proxy.ssl.session-cache</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.ssl.verify-peer">
+<code>proxy.ssl.verify-peer</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.timeout.io">
+<code>proxy.timeout.io</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.timeout.connect">
+<code>proxy.timeout.connect</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.timeout.first_byte">
+<code>proxy.timeout.first_byte</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.timeout.io">
+<code>proxy.timeout.io</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.timeout.keepalive">
+<code>proxy.timeout.keepalive</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.websocket">
+<code>proxy.websocket</code>
+</a></li>
+<li><a href="configure/proxy_directives.html#proxy.websocket.timeout">
+<code>proxy.websocket.timeout</code>
+</a></li>
+</ul>
+
+
+<div id="proxy.reverse.url" class="directive-head">
+<h3><a href="configure/proxy_directives.html#proxy.reverse.url"><code>"proxy.reverse.url"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Forwards the requests to the specified backends, and proxies the response.
+</p>
+
+<div class="example">
+<div class="caption">Example. Forwarding the requests to application server running on <code>127.0.0.1:8080</code></div>
+<pre><code>proxy.reverse.url: &quot;http://127.0.0.1:8080/&quot;
+</code></pre>
+</div>
+
+<div class="example">
+<div class="caption">Example. Forwarding the requests to multiple application server with different weight</div>
+<pre><code>proxy.reverse.url:
+  - http://10.0.0.1:8080/
+  - url: http://10.0.0.2:8080/different-path
+    weight: 2
+</code></pre>
+</div>
+
+<div class="example">
+<div class="caption">Example. Forwarding the requests to multiple application server with least connection</div>
+<pre><code>proxy.reverse.url:
+  backends:
+    - http://10.0.0.1:8080/
+    - http://10.0.0.2:8080/
+  balancer: least-conn
+</code></pre>
+</div>
+
+<p>
+When more than one backend is declared, the load is distributed among the backends using the strategy specified by the <code>balancer</code> property.
+Currently we support <code>round-robin</code> (the default) and <code>least-conn</code> as the value of the property.
+The strategies are applied when establishing a new connection becomes necessary (i.e. when no pooled connections exist).
+</p>
+<p>
+<code>weight</code> can be assigned to each backend as an integer between 1 and 256.
+The default value is 1.
+</p>
+<p>
+For the <code>round-robin</code> balancer, <code>weight</code> is respected in this way: each backend would be selected exactly <code>weight</code> times before next backend would be selected, except when the backend is not accessable.
+</p>
+<p>
+For <code>least-conn</code> balancer, <code>weight</code> is respected in this way: the selected backend should have the minimum value of (request count) / (<code>weight</code>).
+</p>
+<p>
+H2O will try to reconnect to different backends (in the order determined by the load balancing strategy) until it successfully establishes a connection.
+It returns an error when it fails to connect to all of the backends.
+</p>
+<p>
+In addition to TCP/IP over IPv4 and IPv6, the proxy handler can also connect to an HTTP server listening to a Unix socket.
+Path to the unix socket should be surrounded by square brackets, and prefixed with <code>unix:</code> (e.g. <code>http://[unix:/path/to/socket]/path</code>).
+</p>
+
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>path</dd>
+</dl>
+
+<div id="proxy.preserve-host" class="directive-head">
+<h3><a href="configure/proxy_directives.html#proxy.preserve-host"><code>"proxy.preserve-host"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag (<code>ON</code> or <code>OFF</code>) designating whether or not to pass <code>Host</code> header from incoming request to upstream.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.preserve-host: OFF</pre></code>
+</dl>
+
+
+<div id="proxy.preserve-x-forwarded-proto" class="directive-head">
+<div class="directive-since">since v2.0</div>
+<h3><a href="configure/proxy_directives.html#proxy.preserve-x-forwarded-proto"><code>"proxy.preserve-x-forwarded-proto"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag(<code>ON</code> or <code>OFF</code>) indicating if the server preserve the received <code>x-forwarded-proto</code> request header.
+</p>
+
+<p>
+By default, when transmitting a HTTP request to an upstream HTTP server, H2O removes the received <code>x-forwarded-proto</code> request header and sends its own, as a precaution measure to prevent an attacker connecting through HTTP to lie that they are connected via HTTPS.
+However in case H2O is run behind a trusted HTTPS proxy, such protection might not be desirable, and this configuration directive can be used to modify the behaviour.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.preserve-x-forwarded-proto: OFF</pre></code>
+</dl>
+
+<div id="proxy.proxy-protocol" class="directive-head">
+<div class="directive-since">since v2.1</div>
+<h3><a href="configure/proxy_directives.html#proxy.proxy-protocol"><code>"proxy.proxy-protocol"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag (<code>ON</code> or <code>OFF</code>) indicating if <a href="http://www.haproxy.org/download/1.5/doc/proxy-protocol.txt" target="_blank">PROXY protocol</a> should be used when connecting to the application server.
+</p>
+
+<p>
+When using the PROXY protocol, connections to the application server cannot be persistent (i.e. <a href="configure/proxy_directives.html#proxy.timeout.keepalive"><code>proxy.timeout.keepalive</code></a> must be set to zero).
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.proxy-protocol: OFF</pre></code>
+<dt>See also:</dt>
+<dd><a href="configure/proxy_directives.html#proxy.timeout.keepalive"><code>proxy.timeout.keepalive</code></a>
+</dd>
+</dl>
+
+<div id="proxy.emit-x-forwarded-headers" class="directive-head">
+<div class="directive-since">since v2.1</div>
+<h3><a href="configure/proxy_directives.html#proxy.emit-x-forwarded-headers"><code>"proxy.emit-x-forwarded-headers"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag(<code>ON</code> or <code>OFF</code>) indicating if the server will append or add the <code>x-forwarded-proto</code> and <code>x-forwarded-for</code> request headers.
+</p>
+
+<p>
+By default, when forwarding an HTTP request H2O sends its own <code>x-forwarded-proto</code> and <code>x-forwarded-for</code> request headers (or might append its value in the <code>x-forwarded-proto</code> case, see <code>proxy.preserve-x-forwarded-proto</code>). This might not be always desirable. Please keep in mind security implications when setting this of <code>OFF</code>, since it might allow an attacker to spoof the originator or the protocol of a request.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.emit-x-forwarded-headers: ON</pre></code>
+<dt>See also:</dt>
+<dd><a href="configure/proxy_directives.html#proxy.emit-via-header"><code>proxy.emit-via-header</code></a>
+</dd>
+</dl>
+
+<div id="proxy.emit-via-header" class="directive-head">
+<div class="directive-since">since v2.2</div>
+<h3><a href="configure/proxy_directives.html#proxy.emit-via-header"><code>"proxy.emit-via-header"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag (<code>ON</code> or <code>OFF</code>) indicating if the server adds or appends an entry to the <code>via</code> request header.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.emit-via-header: ON</pre></code>
+<dt>See also:</dt>
+<dd><a href="configure/proxy_directives.html#proxy.emit-x-forwarded-headers"><code>proxy.emit-x-forwarded-headers</code></a>
+</dd>
+</dl>
+
+
+<div id="proxy.emit-missing-date-header" class="directive-head">
+<div class="directive-since">since v2.3</div>
+<h3><a href="configure/proxy_directives.html#proxy.emit-missing-date-header"><code>"proxy.emit-missing-date-header"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag (<code>ON</code> or <code>OFF</code>) indicating if H2O should add a <code>date</date> header to the response, if that header is missing from the upstream response.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.emit-missing-date-header: ON</pre></code>
+</dl>
+
+
+<div id="proxy.header.add" class="directive-head">
+<div class="directive-since">since v2.2</div>
+<h3><a href="configure/proxy_directives.html#proxy.header.add"><code>"proxy.header.add"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Modifies the request headers sent to the application server.
+</p>
+
+<p>
+The behavior is identical to <a href="configure/headers_directives.html#header.add"><code>header.add</code></a> except for the fact that it affects the request sent to the application server.
+Please refer to the documentation of the <a href="configure/headers_directives.html">headers handler</a> to see how the directives can be used to mangle the headers.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extensions</dd>
+</dl>
+<div id="proxy.header.append" class="directive-head">
+<div class="directive-since">since v2.2</div>
+<h3><a href="configure/proxy_directives.html#proxy.header.append"><code>"proxy.header.append"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Modifies the request headers sent to the application server.
+</p>
+
+<p>
+The behavior is identical to <a href="configure/headers_directives.html#header.append"><code>header.append</code></a> except for the fact that it affects the request sent to the application server.
+Please refer to the documentation of the <a href="configure/headers_directives.html">headers handler</a> to see how the directives can be used to mangle the headers.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extensions</dd>
+</dl>
+<div id="proxy.header.merge" class="directive-head">
+<div class="directive-since">since v2.2</div>
+<h3><a href="configure/proxy_directives.html#proxy.header.merge"><code>"proxy.header.merge"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Modifies the request headers sent to the application server.
+</p>
+
+<p>
+The behavior is identical to <a href="configure/headers_directives.html#header.merge"><code>header.merge</code></a> except for the fact that it affects the request sent to the application server.
+Please refer to the documentation of the <a href="configure/headers_directives.html">headers handler</a> to see how the directives can be used to mangle the headers.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extensions</dd>
+</dl>
+<div id="proxy.header.set" class="directive-head">
+<div class="directive-since">since v2.2</div>
+<h3><a href="configure/proxy_directives.html#proxy.header.set"><code>"proxy.header.set"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Modifies the request headers sent to the application server.
+</p>
+
+<p>
+The behavior is identical to <a href="configure/headers_directives.html#header.set"><code>header.set</code></a> except for the fact that it affects the request sent to the application server.
+Please refer to the documentation of the <a href="configure/headers_directives.html">headers handler</a> to see how the directives can be used to mangle the headers.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extensions</dd>
+</dl>
+<div id="proxy.header.setifempty" class="directive-head">
+<div class="directive-since">since v2.2</div>
+<h3><a href="configure/proxy_directives.html#proxy.header.setifempty"><code>"proxy.header.setifempty"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Modifies the request headers sent to the application server.
+</p>
+
+<p>
+The behavior is identical to <a href="configure/headers_directives.html#header.setifempty"><code>header.setifempty</code></a> except for the fact that it affects the request sent to the application server.
+Please refer to the documentation of the <a href="configure/headers_directives.html">headers handler</a> to see how the directives can be used to mangle the headers.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extensions</dd>
+</dl>
+<div id="proxy.header.unset" class="directive-head">
+<div class="directive-since">since v2.2</div>
+<h3><a href="configure/proxy_directives.html#proxy.header.unset"><code>"proxy.header.unset"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Modifies the request headers sent to the application server.
+</p>
+
+<p>
+The behavior is identical to <a href="configure/headers_directives.html#header.unset"><code>header.unset</code></a> except for the fact that it affects the request sent to the application server.
+Please refer to the documentation of the <a href="configure/headers_directives.html">headers handler</a> to see how the directives can be used to mangle the headers.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extensions</dd>
+</dl>
+
+
+<div id="proxy.ssl.cafile" class="directive-head">
+<div class="directive-since">since v2.0</div>
+<h3><a href="configure/proxy_directives.html#proxy.ssl.cafile"><code>"proxy.ssl.cafile"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Specifies the file storing the list of trusted root certificates.
+</p>
+
+<p>
+By default, H2O uses <code>share/h2o/ca-bundle.crt</code>.  The file contains a set of trusted root certificates maintained by Mozilla, downloaded and converted using <a href="https://curl.haxx.se/docs/mk-ca-bundle.html">mk-ca-bundle.pl</a>.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>See also:</dt>
+<dd><a href="configure/proxy_directives.html#proxy.ssl.verify-peer"><code>proxy.ssl.verify-peer</code></a>
+</dd>
+</dl>
+
+<div id="proxy.ssl.session-cache" class="directive-head">
+<div class="directive-since">since v2.1</div>
+<h3><a href="configure/proxy_directives.html#proxy.ssl.session-cache"><code>"proxy.ssl.session-cache"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Specifies whether if and how a session cache should be used for TLS connections to the application server.
+</p>
+
+<p>
+Since version 2.1, result of the TLS handshakes to the application server is memoized and later used to resume the connection, unless set to <code>OFF</code> using this directive.
+If the value is a mapping, then the following two attributes must be specified:
+<dl>
+<dt>lifetime:</dt>
+<dd>validity of session cache entries in seconds</dd>
+<dt>capacity:</dt>
+<dd>maxmum number of entries to be kept in the session cache</dd>
+</dl>
+If set to <code>ON</code>, <code>lifetime</code> and <code>capacity</code> will be set to 86,400 (one day) and 4,096.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.ssl.session-cache: ON</pre></code>
+</dl>
+
+<div id="proxy.ssl.verify-peer" class="directive-head">
+<div class="directive-since">since v2.0</div>
+<h3><a href="configure/proxy_directives.html#proxy.ssl.verify-peer"><code>"proxy.ssl.verify-peer"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag (<code>ON</code> or <code>OFF</code>) indicating if the server certificate and hostname should be verified.
+</p>
+
+<p>
+If set to <code>ON</code>, the HTTP client implementation of H2O verifies the peer's certificate using the list of trusted certificates as well as compares the hostname presented in the certificate against the connecting hostname.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.ssl.verify-peer: ON</pre></code>
+<dt>See also:</dt>
+<dd><a href="configure/proxy_directives.html#proxy.ssl.cafile"><code>proxy.ssl.cafile</code></a>
+</dd>
+</dl>
+
+<div id="proxy.timeout.io" class="directive-head">
+<h3><a href="configure/proxy_directives.html#proxy.timeout.io"><code>"proxy.timeout.io"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Sets the upstream I/O timeout in milliseconds.
+</p>
+
+<p>This value will be used for <code>proxy.timeout.connect</code> and <code>proxy.timeout.first_byte</code> as well, unless these parameters are explicitely set.</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.timeout.io: 30000</pre></code>
+</dl>
+
+<div id="proxy.timeout.connect" class="directive-head">
+<div class="directive-since">since v2.3</div>
+<h3><a href="configure/proxy_directives.html#proxy.timeout.connect"><code>"proxy.timeout.connect"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Sets the timeout before establishing the upstream in milliseconds.
+</p>
+
+<p>When connecting to a TLS upstream, this timeout will run until the end of the SSL handshake.</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.timeout.connect: 30000</pre></code>
+</dl>
+
+<div id="proxy.timeout.first_byte" class="directive-head">
+<div class="directive-since">since v2.3</div>
+<h3><a href="configure/proxy_directives.html#proxy.timeout.first_byte"><code>"proxy.timeout.first_byte"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Sets the timeout before receiving the first byte from upstream.
+</p>
+
+<p>This sets the maxium time we will wait for the first byte from upstream, after the establishment of the connection.</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.timeout.first_byte: 30000</pre></code>
+</dl>
+
+<div id="proxy.timeout.io" class="directive-head">
+<div class="directive-since">since v2.3</div>
+<h3><a href="configure/proxy_directives.html#proxy.timeout.io"><code>"proxy.timeout.io"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Sets the upstream I/O timeout in milliseconds.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.timeout.io: 30000</pre></code>
+</dl>
+
+
+<div id="proxy.timeout.keepalive" class="directive-head">
+<h3><a href="configure/proxy_directives.html#proxy.timeout.keepalive"><code>"proxy.timeout.keepalive"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Sets the upstream timeout for idle connections in milliseconds.
+</p>
+
+<p>
+Upstream connection becomes non-persistent if the value is set to zero.
+The value should be set to something smaller than that being set at the upstream server.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.timeout.keepalive: 2000</pre></code>
+</dl>
+
+<div id="proxy.websocket" class="directive-head">
+<h3><a href="configure/proxy_directives.html#proxy.websocket"><code>"proxy.websocket"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+A boolean flag (<code>ON</code> or <code>OFF</code>) indicating whether or not to allow upgrading the proxied connection to <a href="https://tools.ietf.org/html/rfc6455">the WebSocket protocol</a>.
+</p>
+
+<p>
+When set to <code>ON</code>, the proxied connection will be upgraded to a bi-directional tunnel stream if upgrading to WebSocket connection is permitted by the backend server (i.e. if the backend server responds to a WebSocket handshake with <code>101</code> status code).
+</p>
+<p>
+Support for WebSocket is considered experimental for the time being and therefore is not yet turned on by default.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.websocket: OFF</pre></code>
+</dl>
+
+<div id="proxy.websocket.timeout" class="directive-head">
+<h3><a href="configure/proxy_directives.html#proxy.websocket.timeout"><code>"proxy.websocket.timeout"</code></a></h3>
+</div>
+
+<dl class="directive-desc">
+<dt>Description:</dt>
+<dd>
+<p>
+Sets idle timeout of a WebSocket connection being proxied.
+</p>
+
+</dd>
+<dt><a href="configure/syntax_and_structure.html#config_levels">Level</a>:</dt>
+<dd>global, host, path, extension</dd>
+<dt>Default:</dt>
+<dd><code><pre>proxy.websocket.timeout: 300000</pre></code>
+</dl>
+
+
+
+
+
+
+
+</div>
+<div id="footer">
+<p>
+Copyright &copy; 2015 <a href="http://dena.com/intl/">DeNA Co., Ltd.</a> et al.
+</p>
+</div>
+</body>
+</html>

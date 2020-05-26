@@ -1,0 +1,11 @@
+*.o
+*.lo
+*.a
+*.so
+*.so.1
+*.swp
+config.mak
+lib/musl-gcc.specs
+/obj/
+tags
+/build

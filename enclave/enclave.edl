@@ -1,0 +1,37 @@
+enclave {
+
+	struct syscall_arg_t{
+		int busy;
+		long *arg0;
+		long *arg1;
+		long *arg2;
+		long *arg3;
+		long *arg4;
+		long *arg5;
+		long *arg6;
+		long *arg7;
+		long *arg8;
+		long *err_no;
+	};
+
+	trusted {
+		public int ecall_init_transfer([user_check] struct syscall_arg_t *syscall_arg_table,
+				[user_check] void *buf7
+				);
+		public int ecall_shim_main(int argc, [user_check] char **argv);
+		public void ecall_sig_handler(int signum);
+		public void ecall_start_routine([user_check]void *arg);
+		
+		public int ecall_empty();
+		public int ecall_perf_ocall(int count);
+	};
+	untrusted {
+		void ocall_syscall(int syscall_table_index);
+		void ocall_print_string([string,in]char *str);
+		
+		//void *malloc_user(size_t size);
+		//void free_user([user_check]void *ptr);
+
+		int ocall_empty();
+	};
+};

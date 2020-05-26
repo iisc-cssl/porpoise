@@ -1,0 +1,142 @@
+Makefile:94: target 'lib' does not exist
+mkdir -p lib
+Makefile:94: target 'obj' does not exist
+mkdir -p obj
+Makefile:94: target 'obj/crt' does not exist
+mkdir -p obj/crt
+Makefile:94: target 'obj/crt/x86_64' does not exist
+mkdir -p obj/crt/x86_64
+Makefile:94: target 'obj/include' does not exist
+mkdir -p obj/include
+Makefile:94: target 'obj/include/bits' does not exist
+mkdir -p obj/include/bits
+Makefile:94: target 'obj/ldso' does not exist
+mkdir -p obj/ldso
+Makefile:94: target 'obj/src/aio' does not exist
+mkdir -p obj/src/aio
+Makefile:94: target 'obj/src/complex' does not exist
+mkdir -p obj/src/complex
+Makefile:94: target 'obj/src/conf' does not exist
+mkdir -p obj/src/conf
+Makefile:94: target 'obj/src/crypt' does not exist
+mkdir -p obj/src/crypt
+Makefile:94: target 'obj/src/ctype' does not exist
+mkdir -p obj/src/ctype
+Makefile:94: target 'obj/src/dirent' does not exist
+mkdir -p obj/src/dirent
+Makefile:94: target 'obj/src/env' does not exist
+mkdir -p obj/src/env
+Makefile:94: target 'obj/src/errno' does not exist
+mkdir -p obj/src/errno
+Makefile:94: target 'obj/src/exit' does not exist
+mkdir -p obj/src/exit
+Makefile:94: target 'obj/src/fcntl' does not exist
+mkdir -p obj/src/fcntl
+Makefile:94: target 'obj/src/fenv' does not exist
+mkdir -p obj/src/fenv
+Makefile:94: target 'obj/src/fenv/x86_64' does not exist
+mkdir -p obj/src/fenv/x86_64
+Makefile:94: target 'obj/src/internal' does not exist
+mkdir -p obj/src/internal
+Makefile:94: target 'obj/src/internal/x86_64' does not exist
+mkdir -p obj/src/internal/x86_64
+Makefile:94: target 'obj/src/ipc' does not exist
+mkdir -p obj/src/ipc
+Makefile:94: target 'obj/src/ldso' does not exist
+mkdir -p obj/src/ldso
+Makefile:94: target 'obj/src/ldso/x86_64' does not exist
+mkdir -p obj/src/ldso/x86_64
+Makefile:94: target 'obj/src/legacy' does not exist
+mkdir -p obj/src/legacy
+Makefile:94: target 'obj/src/linux' does not exist
+mkdir -p obj/src/linux
+Makefile:94: target 'obj/src/locale' does not exist
+mkdir -p obj/src/locale
+Makefile:94: target 'obj/src/malloc' does not exist
+mkdir -p obj/src/malloc
+Makefile:94: target 'obj/src/math' does not exist
+mkdir -p obj/src/math
+Makefile:94: target 'obj/src/math/x86_64' does not exist
+mkdir -p obj/src/math/x86_64
+Makefile:94: target 'obj/src/misc' does not exist
+mkdir -p obj/src/misc
+Makefile:94: target 'obj/src/mman' does not exist
+mkdir -p obj/src/mman
+Makefile:94: target 'obj/src/mq' does not exist
+mkdir -p obj/src/mq
+Makefile:94: target 'obj/src/multibyte' does not exist
+mkdir -p obj/src/multibyte
+Makefile:94: target 'obj/src/network' does not exist
+mkdir -p obj/src/network
+Makefile:94: target 'obj/src/passwd' does not exist
+mkdir -p obj/src/passwd
+Makefile:94: target 'obj/src/prng' does not exist
+mkdir -p obj/src/prng
+Makefile:94: target 'obj/src/process' does not exist
+mkdir -p obj/src/process
+Makefile:94: target 'obj/src/process/x86_64' does not exist
+mkdir -p obj/src/process/x86_64
+Makefile:94: target 'obj/src/regex' does not exist
+mkdir -p obj/src/regex
+Makefile:94: target 'obj/src/sched' does not exist
+mkdir -p obj/src/sched
+Makefile:94: target 'obj/src/search' does not exist
+mkdir -p obj/src/search
+Makefile:94: target 'obj/src/select' does not exist
+mkdir -p obj/src/select
+Makefile:94: target 'obj/src/setjmp/x86_64' does not exist
+mkdir -p obj/src/setjmp/x86_64
+Makefile:94: target 'obj/src/signal' does not exist
+mkdir -p obj/src/signal
+Makefile:94: target 'obj/src/signal/x86_64' does not exist
+mkdir -p obj/src/signal/x86_64
+Makefile:94: target 'obj/src/stat' does not exist
+mkdir -p obj/src/stat
+Makefile:94: target 'obj/src/stdio' does not exist
+mkdir -p obj/src/stdio
+Makefile:94: target 'obj/src/stdlib' does not exist
+mkdir -p obj/src/stdlib
+Makefile:94: target 'obj/src/string' does not exist
+mkdir -p obj/src/string
+Makefile:94: target 'obj/src/string/x86_64' does not exist
+mkdir -p obj/src/string/x86_64
+Makefile:94: target 'obj/src/temp' does not exist
+mkdir -p obj/src/temp
+Makefile:94: target 'obj/src/termios' does not exist
+mkdir -p obj/src/termios
+Makefile:94: target 'obj/src/thread' does not exist
+mkdir -p obj/src/thread
+Makefile:94: target 'obj/src/thread/x86_64' does not exist
+mkdir -p obj/src/thread/x86_64
+Makefile:94: target 'obj/src/time' does not exist
+mkdir -p obj/src/time
+Makefile:94: target 'obj/src/unistd' does not exist
+mkdir -p obj/src/unistd
+Makefile:97: update target 'obj/include/bits/alltypes.h' due to: arch/x86_64/bits/alltypes.h.in include/alltypes.h.in tools/mkalltypes.sed
+sed -f ./tools/mkalltypes.sed ./arch/x86_64/bits/alltypes.h.in ./include/alltypes.h.in > obj/include/bits/alltypes.h
+Makefile:100: update target 'obj/include/bits/syscall.h' due to: arch/x86_64/bits/syscall.h.in
+cp arch/x86_64/bits/syscall.h.in obj/include/bits/syscall.h
+sed -n -e s/__NR_/SYS_/p < arch/x86_64/bits/syscall.h.in >> obj/include/bits/syscall.h
+Makefile:148: update target 'obj/crt/Scrt1.o' due to: crt/Scrt1.c obj/include/bits/alltypes.h obj/include/bits/syscall.h src/internal/stdio_impl.h src/internal/pthread_impl.h src/internal/locale_impl.h src/internal/libc.h
+gcc -std=c99 -nostdinc -ffreestanding -fexcess-precision=standard -frounding-math -Wa,--noexecstack -fPIC -D_XOPEN_SOURCE=700 -I./arch/x86_64 -I./arch/generic -Iobj/src/internal -I./src/internal -Iobj/include -I./include -I../../enclave/shim_layer  -Os -pipe -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith  -fPIC -fno-stack-protector -DCRT -c -o obj/crt/Scrt1.o crt/Scrt1.c
+Makefile:176: update target 'lib/Scrt1.o' due to: obj/crt/Scrt1.o
+cp obj/crt/Scrt1.o lib/Scrt1.o
+Makefile:148: update target 'obj/crt/crt1.o' due to: crt/crt1.c obj/include/bits/alltypes.h obj/include/bits/syscall.h src/internal/stdio_impl.h src/internal/pthread_impl.h src/internal/locale_impl.h src/internal/libc.h arch/x86_64/crt_arch.h
+gcc -std=c99 -nostdinc -ffreestanding -fexcess-precision=standard -frounding-math -Wa,--noexecstack -fPIC -D_XOPEN_SOURCE=700 -I./arch/x86_64 -I./arch/generic -Iobj/src/internal -I./src/internal -Iobj/include -I./include -I../../enclave/shim_layer  -Os -pipe -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith  -fno-stack-protector -DCRT -c -o obj/crt/crt1.o crt/crt1.c
+Makefile:176: update target 'lib/crt1.o' due to: obj/crt/crt1.o
+cp obj/crt/crt1.o lib/crt1.o
+Makefile:148: update target 'obj/crt/rcrt1.o' due to: crt/rcrt1.c obj/include/bits/alltypes.h obj/include/bits/syscall.h src/internal/stdio_impl.h src/internal/pthread_impl.h src/internal/locale_impl.h src/internal/libc.h src/internal/dynlink.h arch/x86_64/reloc.h arch/x86_64/crt_arch.h ldso/dlstart.c
+gcc -std=c99 -nostdinc -ffreestanding -fexcess-precision=standard -frounding-math -Wa,--noexecstack -fPIC -D_XOPEN_SOURCE=700 -I./arch/x86_64 -I./arch/generic -Iobj/src/internal -I./src/internal -Iobj/include -I./include -I../../enclave/shim_layer  -Os -pipe -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith  -fPIC -fno-stack-protector -DCRT -c -o obj/crt/rcrt1.o crt/rcrt1.c
+Makefile:176: update target 'lib/rcrt1.o' due to: obj/crt/rcrt1.o
+cp obj/crt/rcrt1.o lib/rcrt1.o
+Makefile:142: update target 'obj/crt/x86_64/crti.o' due to: crt/x86_64/crti.s
+gcc -std=c99 -nostdinc -ffreestanding -fexcess-precision=standard -frounding-math -Wa,--noexecstack -fPIC -D_XOPEN_SOURCE=700 -I./arch/x86_64 -I./arch/generic -Iobj/src/internal -I./src/internal -Iobj/include -I./include -I../../enclave/shim_layer  -Os -pipe -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith  -fno-stack-protector -DCRT -c -o obj/crt/x86_64/crti.o crt/x86_64/crti.s
+Makefile:173: update target 'lib/crti.o' due to: obj/crt/x86_64/crti.o
+cp obj/crt/x86_64/crti.o lib/crti.o
+Makefile:142: update target 'obj/crt/x86_64/crtn.o' due to: crt/x86_64/crtn.s
+gcc -std=c99 -nostdinc -ffreestanding -fexcess-precision=standard -frounding-math -Wa,--noexecstack -fPIC -D_XOPEN_SOURCE=700 -I./arch/x86_64 -I./arch/generic -Iobj/src/internal -I./src/internal -Iobj/include -I./include -I../../enclave/shim_layer  -Os -pipe -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith  -fno-stack-protector -DCRT -c -o obj/crt/x86_64/crtn.o crt/x86_64/crtn.s
+Makefile:173: update target 'lib/crtn.o' due to: obj/crt/x86_64/crtn.o
+cp obj/crt/x86_64/crtn.o lib/crtn.o
+Makefile:148: update target 'obj/src/aio/aio.o' due to: src/aio/aio.c obj/include/bits/alltypes.h obj/include/bits/syscall.h src/internal/stdio_impl.h src/internal/pthread_impl.h src/internal/locale_impl.h src/internal/libc.h
+gcc -std=c99 -nostdinc -ffreestanding -fexcess-precision=standard -frounding-math -Wa,--noexecstack -fPIC -D_XOPEN_SOURCE=700 -I./arch/x86_64 -I./arch/generic -Iobj/src/internal -I./src/internal -Iobj/include -I./include -I../../enclave/shim_layer  -Os -pipe -fomit-frame-pointer -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith  -c -o obj/src/aio/aio.o src/aio/aio.c
+Makefile:148: recipe for target 'obj/src/aio/aio.o' failed

@@ -1,0 +1,10 @@
+/build
+*.o
+*.bak
+/config.h
+/config.log
+/config.status
+*.a
+/funmap.o
+*.o
+*.dll

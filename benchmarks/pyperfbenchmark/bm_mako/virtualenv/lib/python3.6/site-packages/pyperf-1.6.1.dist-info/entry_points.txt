@@ -1,0 +1,3 @@
+[console_scripts]
+pyperf = pyperf.__main__:main
+
