@@ -37,7 +37,7 @@ enclave/python/build/python: enclave/python/Programs/python.c
 enclave/openssl/apps/openssl: enclave/openssl/apps/openssl.c
 	@echo Building $@
 	(cd enclave/openssl; $(SHELL) build.sh)
-enclave/memcached/memcached: enclave/memcached/*.c enclave/libevent/_install/lib/libevent.a
+enclave/memcached/memcached: enclave/memcached/*.c
 	@echo Building $@
 	(cd enclave/memcached; $(SHELL) build.sh)
 
