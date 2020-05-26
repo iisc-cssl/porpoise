@@ -1,4 +1,5 @@
 #!/bin/sh
+mkdir -p enclave/lib
 (cd enclave/musl;sh build.sh)
 (cd enclave/openssl; sh build.sh)
 (cd enclave/readline; sh build.sh)
