@@ -1,4 +1,2 @@
-/build
-/config.log
-/config.status
-
+/ncurses-*
+ncurses-*.tar.gz
