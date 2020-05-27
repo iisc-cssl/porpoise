@@ -1,8 +1,8 @@
-#if [ ! -f libevent-2.1.11-stable.tar.gz ]
-#then
-#	wget https://github.com/libevent/libevent/releases/download/release-2.1.11-stable/libevent-2.1.11-stable.tar.gz
-#fi
-#tar -xvf libevent-2.1.11-stable.tar.gz --strip 1
+if [ ! -f libevent-2.1.11-stable.tar.gz ]
+then
+	wget https://github.com/libevent/libevent/releases/download/release-2.1.11-stable/libevent-2.1.11-stable.tar.gz
+fi
+tar -xvf libevent-2.1.11-stable.tar.gz --strip 1
 
 sh autogen.sh
 rm -rf build
@@ -13,3 +13,4 @@ make
 make install-am
 cd ..
 cp install/lib/*.a ../lib
+
