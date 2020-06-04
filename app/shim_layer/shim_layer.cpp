@@ -81,7 +81,7 @@ static int shim_init()
 	char signed_enclave_name[200] = {NULL};
 	sprintf(signed_enclave_name,"enclave.%s.signed.so",basename(ARGV[0]));
 	printf("signed_enclave_name = %s\n", signed_enclave_name);
-	printf("SGX_DEBUF_FLAG = %d\n", SGX_DEBUG_FLAG);
+	//printf("SGX_DEBUF_FLAG = %d\n", SGX_DEBUG_FLAG);
 	enclave_created = sgx_create_enclave(signed_enclave_name, SGX_DEBUG_FLAG, &launch_token,
 					&launch_token_updated, &enclave_id, NULL);
 	//assert(status == SGX_SUCCESS);
@@ -98,7 +98,7 @@ static int shim_init()
 	sigaction(SIGFPE, NULL, &act_old);
 	sgx_sig_handler_ptr =  (void*)act_old.sa_sigaction;
 
-	printf("(user) MAX_NO_OF_THREADS %d\n", MAX_NO_OF_THREADS);
+	//printf("(user) MAX_NO_OF_THREADS %d\n", MAX_NO_OF_THREADS);
 	return 0;
 }
 
@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 	  (end_rt.tv_nsec - start_rt.tv_nsec) / BILLION;
 	#endif
 	*/
-	printf("Welcome to sample application\n");
+	//printf("Welcome to sample application\n");
 
 	int returned_value;
 	sgx_status_t ecall_success;
