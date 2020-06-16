@@ -1,0 +1,5 @@
+#Begin: configuration of porting application
+application_name := <application_name>
+native_application_location = <path to directory containing native linux application>
+
+include common.mk

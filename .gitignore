@@ -1,3 +1,5 @@
+cjpeg
+testoutp.jpg
 /apps
 /a.out
 /tags
@@ -26,3 +28,5 @@ Session.vim
 /enclave/python/install/
 /enclave/python/build/
 *.so
+enclave/libjpeg
+Makefile.cjpeg
