@@ -1,3 +1,5 @@
+<img src="porpoise-logo.png" height=200>
+
 ## Porpoise: A tool to port commodity application to Intel SGX
 
 ### Requirements
