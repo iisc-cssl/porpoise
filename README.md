@@ -136,6 +136,12 @@ compile and link Porpoise with cjpeg
 make -f Makefile.cjpg
 ./cjpeg -greyscale -dct int -progressive -opt -outfile testoutp.jpg enclave/libjpeg/testimg.ppm
 ```
+
+### Screencast of porting libjpeg to Intel SGX with porpoise
+
+[![asciicast](https://asciinema.org/a/aa0CqVn4GKz1lPDNjs3WZUvsh.svg)](https://asciinema.org/a/aa0CqVn4GKz1lPDNjs3WZUvsh)
+
+
 ### Here some of the common errors which developers come across when porting an application to Intel SGX with Porpoise.
 
 * undefined reference
