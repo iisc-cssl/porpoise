@@ -2,6 +2,42 @@
 
 ## Porpoise: A tool to port commodity application to Intel SGX
 
+This repository contains offical source code of [Porpoise](#) used in the the
+paper titled [An evaluation of methods to port legacy code to SGX
+enclaves](https://doi.org/10.1145/3368089.3409726) by [Kripa
+Shanker](https://kripashanker.in/), [Arun
+Joseph](https://arunjoseph0.github.io/), and [Vinod
+Ganapathy](https://www.csa.iisc.ac.in/~vg/). The paper is published in the
+proceedings of the 28th ACM Joint Meeting on European Software Engineering
+Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE)
+	November 2020.
+
+If you find [Porpoise](#) useful for your research, please consider citing the paper [An evaluation of methods to port legacy code to SGX
+enclaves](https://doi.org/10.1145/3368089.3409726) as follows:-
+```
+@inproceedings{fse2020shanker,
+author = {Shanker, Kripa and Joseph, Arun and Ganapathy, Vinod},
+title = {An Evaluation of Methods to Port Legacy Code to SGX Enclaves},
+year = {2020},
+isbn = {9781450370431},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3368089.3409726},
+doi = {10.1145/3368089.3409726},
+booktitle = {Proceedings of the 28th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+pages = {1077–1088},
+numpages = {12},
+keywords = {SGX, legacy code, porting, enclaves},
+location = {Virtual Event, USA},
+series = {ESEC/FSE 2020}
+}
+```
+### Sample Applications ported with Porpoise
+* [Memcached](enclave/memcached)
+* [C Python interpreter](enclave/python)
+* [OpenSSL](enclave/openssl)
+* [H2O Optimized HTTP/2 web server](enclave/h2o)
+
 ### Requirements
 
 * Intel 6th generation skylake CPU or later which provide support for intel SGX.
